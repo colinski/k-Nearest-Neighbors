@@ -1,12 +1,8 @@
 import math, sys
-from arff_parser import ArffParser
 from feature import Feature
 from sorted_array import SortedArray
 
-def main():
-	(train_instances, features, labels) = ArffParser(sys.argv[1]).parse()
-	test_instances = ArffParser(sys.argv[2]).parse()[0]
-	k = int(sys.argv[3])
+def knn_learn(train_instances, test_instances, k, features, labels, doPrint):
 	mode = 'r' if labels == [] else 'c'
 	err = 0.0
 	for i in range(0, len(test_instances)):
@@ -18,21 +14,27 @@ def main():
 				avg += get_label(n[0], mode)
 			avg /= len(neighbors)
 			err += abs(avg - get_label(q, mode))
-			print('Predicted value : ' + '{0:.6f}'.format(avg)
-				+ '\tActual value : '  + '{0:.6f}'.format(get_label(q, mode)))
+			if doPrint:
+				print('Predicted value : ' + '{0:.6f}'.format(avg)
+					+ '\tActual value : '  + '{0:.6f}'.format(get_label(q, mode)))
 		else:
 			guess = predict_class(neighbors, q, labels)
 			if guess != get_label(q, mode):
 				err += 1
-			print 'Predicted class : ' + guess + '\t Actual class : ' + get_label(q, mode)
+			if doPrint:
+				print 'Predicted class : ' + guess + '\t Actual class : ' + get_label(q, mode)
 
 	if mode == 'r':
-		print 'Mean absolute error : ' + '{0:.16f}'.format((err / len(test_instances)))
-		print 'Total number of instances : ' + str(len(test_instances))
+		if doPrint:
+			print 'Mean absolute error : ' + '{0:.16f}'.format((err / len(test_instances)))
+			print 'Total number of instances : ' + str(len(test_instances))
+		return err / len(test_instances)
 	else:
-		print 'err is ' + str(err)
-		print 'got ' + str(len(test_instances) - err) + ' right'
-		print 'total ' + str(len(test_instances))
+		if doPrint:
+			print 'err is ' + str(err)
+			print 'got ' + str(len(test_instances) - err) + ' right'
+			print 'total ' + str(len(test_instances))
+		return err
 
 def find_nearest_neighbors(q, k, train_instances):
 	neighbors = SortedArray(k)
@@ -113,7 +115,3 @@ def label_to_index(n, labels):
 	#	pass
 	#	print key + ' ' + str(len(sorted_sets[key]))
 	#prinot '\n-------'
-
-
-if __name__ == '__main__':
-	main()
