@@ -8,6 +8,10 @@ def knn_learn(train_instances, test_instances, k, features, labels, doPrint):
 	for i in range(0, len(test_instances)):
 		q = test_instances[i]
 		neighbors = find_nearest_neighbors(q, k, train_instances)
+
+		for n in neighbors:
+			print get_label(n[0], mode)
+
 		if mode == 'r':
 			avg = 0.0
 			for n in neighbors:
@@ -60,19 +64,44 @@ def predict_class(neighbors, q, labels):
 		if not neighbor_sets.has_key(label):
 			neighbor_sets[label] = []
 		neighbor_sets[label].append(n)
+
 	best = 0
 	for key in neighbor_sets:
 		if len(neighbor_sets[key]) > best:
-			best = len(neighbor_sets[label])
-	best_neighbors = []
-	for key in neighbor_sets:
-		if len(neighbor_sets[key]) == best:
-			for n in neighbor_sets[key]:
-				best_neighbors.append(n)
+			best = len(neighbor_sets[key])
 	
-	if len(best_neighbors) == 1:
+	for key in neighbor_sets:
+		if len(neighbor_sets[key]) != best:
+			del neighbor_sets[key]
+
+	best_index = float('inf')
+	best_label = ''
+	for key in neighbor_sets:
+		index = label_to_index(key, labels)
+		if index < best_index:
+			best_index = index
+			best_label = key
+	return best_label
+
+	
+
+'''
+	for key in neighbor_sets:
+	if len(neighbor_sets.keys()) == 1:
 		#print 'returning because size is 1'
-		return get_label(best_neighbors[0][0], 'c')
+
+		return get_label(neighbor_sets[0][0], 'c')
+
+
+	best_index = float('inf')
+	best_label = ''
+	for n in best_neighbors:
+		index = label_to_index(n[0], labels)
+		if index < best_index:
+			best_index = index
+			best_label = get_label(n[0], 'c')
+	return best_label
+
 
 	best_neighbors.sort(key = lambda x : x[1])
 	best_dist = float(best_neighbors[0][1])
@@ -90,11 +119,12 @@ def predict_class(neighbors, q, labels):
 			best_label = get_label(n[0], 'c')
 	#closest_neighbors.sort(key = lambda n : label_to_index(n[0], features))
 	return best_label
+'''
 
 
-def label_to_index(n, labels):
+def label_to_index(l, labels):
 	for i in range(0, len(labels)):
-		if labels[i] == get_label(n, 'c'):
+		if labels[i] == l:
 			return i
 
 
