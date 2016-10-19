@@ -1,16 +1,19 @@
 import math, sys
 from feature import Feature
 from sorted_array import SortedArray
+from collections import OrderedDict
 
-def knn_learn(train_instances, test_instances, k, features, labels, doPrint):
+def knn_learn(train_instances, test_instances, k, labels, doPrint):
 	mode = 'r' if labels == [] else 'c'
 	err = 0.0
-	for i in range(0, len(test_instances)):
+	for i in range(len(test_instances)):
 		q = test_instances[i]
 		neighbors = find_nearest_neighbors(q, k, train_instances)
 
+		'''
 		for n in neighbors:
 			print get_label(n[0], mode)
+		'''
 
 		if mode == 'r':
 			avg = 0.0
@@ -49,7 +52,7 @@ def find_nearest_neighbors(q, k, train_instances):
 
 def calc_dist(v, w):
 	dist = 0
-	for i in range(0, len(v) - 1):
+	for i in range(len(v) - 1):
 		dist += (float(v[i]) - float(w[i])) ** 2.0
 	return math.sqrt(dist)
 
@@ -59,30 +62,42 @@ def get_label(n, mode):
 
 def predict_class(neighbors, q, labels):
 	neighbor_sets = {}
+	for l in labels:
+		neighbor_sets[l] = 0
+	
 	for n in neighbors:
 		label = get_label(n[0], 'c')
-		if not neighbor_sets.has_key(label):
-			neighbor_sets[label] = []
-		neighbor_sets[label].append(n)
+		#if not neighbor_sets.has_key(label):
+		#	neighbor_sets[label] = 0
+		neighbor_sets[label] += 1
 
 	best = 0
 	for key in neighbor_sets:
-		if len(neighbor_sets[key]) > best:
-			best = len(neighbor_sets[key])
+		if neighbor_sets[key] > best:
+			best = neighbor_sets[key]
 	
-	for key in neighbor_sets:
-		if len(neighbor_sets[key]) != best:
-			del neighbor_sets[key]
-
-	best_index = float('inf')
+	best_index = float('inf')s
 	best_label = ''
+	for key in neighbor_sets.keys():
+		if neighbor_sets[key] == best:
+			index = label_to_index(key, labels)
+			if index < best_index:
+				best_index = index
+				best_label = key
+			#del neighbor_sets[key]
+	return best_label
+
+	#return neighbor_sets.keys()[0]
+
+	
+	'''
 	for key in neighbor_sets:
 		index = label_to_index(key, labels)
 		if index < best_index:
 			best_index = index
 			best_label = key
 	return best_label
-
+	'''
 	
 
 '''
@@ -123,25 +138,6 @@ def predict_class(neighbors, q, labels):
 
 
 def label_to_index(l, labels):
-	for i in range(0, len(labels)):
+	for i in range(len(labels)):
 		if labels[i] == l:
 			return i
-
-
-	#if get_label(best_neighbors[0][0], 'c') != get_label(best_neighbors[1][0], 'c') and\
-			#		best_neighbors[0][1] == best_neighbors[1][1]:
-			#	return get_label(q, 'c')
-	#else:
-	#	return get_label(best_neighbors[0][0], 'c')
-	#check class and dist of firs two
-	#otherwise return
-
-	#print type(sets)
-	#print type(sorted(sets, key = lambda k : len(sets[k])))
-	#print '-------'
-	#if len(best_sets) > 1:
-		#	print best_sets
-	#for key in sorted_sets:
-	#	pass
-	#	print key + ' ' + str(len(sorted_sets[key]))
-	#prinot '\n-------'
