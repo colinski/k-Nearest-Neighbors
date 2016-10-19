@@ -16,7 +16,7 @@ def main():
 		kvalues = [int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])]
 		for k in kvalues:
 			err = 0.0
-			for i in range(0, len(train_instances) - 1):
+			for i in range(len(train_instances)):
 				train_copy = list(train_instances)
 				inst = train_copy.pop(i)
 				err += kl.knn_learn(train_copy, [inst], k, features, labels, False)
