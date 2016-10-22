@@ -1,17 +1,16 @@
 import sys, math
-from feature import Feature
 from sorted_array import SortedArray
 
-def knn_learn(train_instances, test_instances, k, labels, mode, doPrint):
+def knn_learn(train_data, test_data, k, labels, mode, doPrint):
 	err = 0.0
-	for i in range(len(test_instances)):
-		q = test_instances[i]
-		neighbors = find_nearest_neighbors(q, k, train_instances)
+	i = 0
+	for q in test_data:
+		neighbors = find_nearest_neighbors(q, k, train_data)
 		if mode == 'r':
 			avg = 0.0
 			for n in neighbors:
 				avg += get_label(n[0], mode)
-			avg /= len(neighbors)
+			avg /= float(len(neighbors))
 			err += abs(avg - get_label(q, mode))
 			if doPrint:
 				print('Predicted value : ' + '{0:.6f}'.format(avg)
@@ -25,20 +24,20 @@ def knn_learn(train_instances, test_instances, k, labels, mode, doPrint):
 	
 	if mode == 'r':
 		if doPrint:
-			print('Mean absolute error : ' + '{0:.16f}'.format((err / len(test_instances))) 
-				+ '\nTotal number of instances : ' + str(len(test_instances)))
-		return err / len(test_instances)
+			print('Mean absolute error : ' + '{0:.16f}'.format((err / len(test_data))) 
+				+ '\nTotal number of instances : ' + str(len(test_data)))
+		return err / len(test_data)
 	else:
 		if doPrint:
-			num_correct = int(len(test_instances) - err)
+			num_correct = int(len(test_data) - err)
 			print('Number of correctly classified instances : ' + str(num_correct)
-				+ '\nTotal number of instances : ' + str(len(test_instances)) 
-				+ '\nAccuracy : ' + '{0:.16f}'.format((float(num_correct) / len(test_instances))))
+				+ '\nTotal number of instances : ' + str(len(test_data)) 
+				+ '\nAccuracy : ' + '{0:.16f}'.format((float(num_correct) / len(test_data))))
 		return err
 
-def find_nearest_neighbors(q, k, train_instances):
+def find_nearest_neighbors(q, k, train_data):
 	neighbors = SortedArray(k)
-	for x in train_instances:
+	for x in train_data:
 		dist = calc_dist(q, x)
 		neighbors.add((x, dist))
 	return neighbors.array
