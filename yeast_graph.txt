@@ -1,0 +1,15 @@
+k =  1
+Total number of instances : 445
+Accuracy : 0.4831460674157304
+k =  5
+Total number of instances : 445
+Accuracy : 0.5483146067415731
+k =  10
+Total number of instances : 445
+Accuracy : 0.5685393258426966
+k =  20
+Total number of instances : 445
+Accuracy : 0.5730337078651685
+k =  30
+Total number of instances : 445
+Accuracy : 0.5617977528089888

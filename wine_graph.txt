@@ -1,0 +1,10 @@
+Mean absolute error : 0.6955380577427821
+Total number of instances : 3429
+Mean absolute error : 0.6956838728492272
+Total number of instances : 3429
+Mean absolute error : 0.6884417225624573
+Total number of instances : 3429
+Mean absolute error : 0.6814814814814845
+Total number of instances : 3429
+Mean absolute error : 0.6582385535141413
+Total number of instances : 3429
