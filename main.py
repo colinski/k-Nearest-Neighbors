@@ -29,7 +29,7 @@ def main():
 		for k in kvalues:
 			err = 0.0
 			for i in range(len(train_data)):
-				train_copy = list(train_data)
+				train_copy = train_data
 				inst = train_copy.pop(i)
 				err += kl.knn_learn(train_copy, [inst], k, labels, mode, False)
 			if err < lowest_err:
